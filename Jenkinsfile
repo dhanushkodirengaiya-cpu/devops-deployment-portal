@@ -49,7 +49,8 @@ pipeline {
                 )]) {
                     bat '''
                         icacls "%SSH_KEY%" /inheritance:r
-                        icacls "%SSH_KEY%" /grant:r "%USERNAME%:R"
+                        icacls "%SSH_KEY%" /grant:r "*S-1-5-18:(R)"
+                        icacls "%SSH_KEY%" /setowner "*S-1-5-18"
                         C:\\Windows\\System32\\OpenSSH\\ssh.exe -i "%SSH_KEY%" -o BatchMode=yes -o StrictHostKeyChecking=accept-new %SSH_USER%@3.109.124.42 "echo EC2 SSH connection successful"
                     '''
                 }
