@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'dhanushkodirengaiya/devops-deployment-portal'
+        DOCKER = 'C:\\Users\\dkodi\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
     }
 
     stages {
@@ -15,13 +16,13 @@ pipeline {
 
         stage('Install and Test') {
             steps {
-                bat 'docker run --rm -v "%WORKSPACE%:/app" -w /app node:22-alpine sh -c "npm install && npm test"'
+                bat '"%DOCKER%" run --rm -v "%WORKSPACE%:/app" -w /app node:22-alpine sh -c "npm install && npm test"'
             }
         }
 
         stage('Docker Build') {
             steps {
-                bat 'docker build -t %IMAGE_NAME%:latest .'
+                bat '"%DOCKER%" build -t %IMAGE_NAME%:latest .'
             }
         }
 
@@ -32,9 +33,9 @@ pipeline {
                     usernameVariable: 'DOCKERHUB_USER',
                     passwordVariable: 'DOCKERHUB_TOKEN'
                 )]) {
-                    bat 'echo %DOCKERHUB_TOKEN%| docker login -u %DOCKERHUB_USER% --password-stdin'
-                    bat 'docker push %IMAGE_NAME%:latest'
-                    bat 'docker logout'
+                    bat 'echo %DOCKERHUB_TOKEN%| "%DOCKER%" login -u %DOCKERHUB_USER% --password-stdin'
+                    bat '"%DOCKER%" push %IMAGE_NAME%:latest'
+                    bat '"%DOCKER%" logout'
                 }
             }
         }
