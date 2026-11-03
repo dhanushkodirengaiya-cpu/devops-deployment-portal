@@ -16,7 +16,7 @@ pipeline {
 
         stage('Install and Test') {
             steps {
-                bat '"%DOCKER%" run --rm -v "%WORKSPACE%:/app" -w /app node:22-alpine sh -c "npm install && npm test"'
+                bat '"%DOCKER%" run --rm -v "%WORKSPACE%:/app:ro" -w /app node:22-alpine npm test'
             }
         }
 
